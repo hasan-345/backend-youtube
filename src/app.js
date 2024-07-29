@@ -4,15 +4,18 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-//configuration
+//this is important configuration
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173", //include url of requesting website
     credentials: true
 }))
 app.use(express.json({limit:"1gb"}));
 app.use(express.urlencoded({extended:true}));
 app.use(express.static("public"));
 app.use(cookieParser());
+
+
+
 
 import userRoutes from "./routes/user.routes.js"
 import videoRoutes from "./routes/video.routes.js"

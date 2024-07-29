@@ -110,8 +110,8 @@ const userHandler = asyncHandler(async (req,res)=>{
           new ApiResponse(200,createdUser,"Succes")
         )
     } catch (error) {
-      if (fs.existsSync(videoPath)) fs.unlinkSync(avatarLocalPath);
-    if (fs.existsSync(thumbnailPath)) fs.unlinkSync(coverImageLocalPath);
+      if (fs.existsSync(avatarLocalPath)) fs.unlinkSync(avatarLocalPath);
+    if (fs.existsSync(coverImageLocalPath)) fs.unlinkSync(coverImageLocalPath);
       throw new ApiError(500,"server issues")
     }
 })
@@ -128,30 +128,34 @@ const loginHandler  = asyncHandler(async(req,res)=>{
     email
      })
 
-     if(!existedUser){
-      throw new ApiError(404,"user does not exist");
-     }
-
-  const checkPassword = await existedUser.isPasswordCorrect(password)
- 
-  if(!checkPassword){
-    throw new ApiError(401,"Invalid user credentials");
-   }
-
-   const {refreshToken,accessToken} = await generateRefereshAndAccessToken(existedUser._id);
-
-   const loggedIn = await User.findById(existedUser._id).select(
-    "-password -refreshToken"
-   )
+    try {
+       if(!existedUser){
+        throw new ApiError(404,"user does not exist");
+       }
+  
+    const checkPassword = await existedUser.isPasswordCorrect(password)
    
-   const options = {
-     httpOnly : true,
-     secure: true
-   }
-   return res.status(200)
-   .cookie("refreshToken",refreshToken,options)
-   .cookie("accessToken",accessToken,options)
-   .json(new ApiResponse(200,loggedIn,"Success"))  
+    if(!checkPassword){
+        throw new ApiError(404,"Invalid user credential")
+     }
+  
+     const {refreshToken,accessToken} = await generateRefereshAndAccessToken(existedUser._id);
+  
+     const loggedIn = await User.findById(existedUser._id).select(
+      "-password -refreshToken"
+     )
+     
+     const options = {
+       httpOnly : true,
+       secure: true
+     }
+     return res.status(200)
+     .cookie("refreshToken",refreshToken,options)
+     .cookie("accessToken",accessToken,options)
+     .json(new ApiResponse(200,loggedIn,"Success"))  
+    } catch (error) {
+      throw new ApiError(500,"server issue to fetch user")
+    }
 
       
 

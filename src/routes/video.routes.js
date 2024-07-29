@@ -16,10 +16,10 @@ router.route("/uploadVideo").post(verifyJWT,upload.fields([
     }
 ]),uploadVideo)
 
-router.use(upload.none())
+// router.use(upload.none())
 
 router.route("/getVideo/:videoId").get(verifyJWT,getVideoById);
-router.route("/update-video/:videoId").patch(verifyJWT,upload.single("thumbnail"),updateVideo)
+router.route("/update-video/:videoId").post(verifyJWT,upload.single("thumbnail"),updateVideo)
 router.route("/delete-video/:videoId").get(verifyJWT,deleteVideo)
 router.route("/get-all-videos").get(getAllVideos)
 router.route("/addViews/:videoId").post(verifyJWT,addViewsOfVideo)

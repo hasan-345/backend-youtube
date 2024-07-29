@@ -60,7 +60,8 @@ const getPlaylistById = asyncHandler(async(req,res)=>{
                         videoFile: 1,
                         thumbnail: 1,
                         duration: 1,
-                        owner: 1
+                        owner: 1,
+                        createdAt: 1
 
                     }
                 }
